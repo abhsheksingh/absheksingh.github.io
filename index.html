@@ -531,33 +531,17 @@
 
             </div>
         </div>
-    </div>
 
-<script>
-  document.querySelectorAll('.marquee').forEach((marquee) => {
-    const root = document.documentElement;
-    const displayed = getComputedStyle(root).getPropertyValue("--marquee-elements-displayed");
-    const content = marquee.querySelector(".marquee-content");
+      <!-- Digital Badges -->
 
-    root.style.setProperty("--marquee-elements", content.children.length);
+      <div class="container mx-auto px-4 py-8">
+            <div class="px-8 bg-white  text-justify py-2 " >
+            <h1 class="py-8 mx-auto text-center text-3xl font-bold uppercase" > Digital Badges  </h1>
 
-    for (let i = 0; i < displayed; i++) {
-      content.appendChild(content.children[i].cloneNode(true));
-    }
-  });
-</script>
+          </div>
+        <div id="cardGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  lg:grid-cols-4 gap-6"></div>
+      </div>
 
-<!--MARQEES  -->
-
-
-<!-- Digital Badges -->
-
-<div class="container mx-auto px-4 py-8">
-      <div class="px-8 bg-white text-slate-900 text-justify py-2 " >
-      <h1 class="py-8 mx-auto text-center text-3xl font-bold uppercase" > Digital Badges  </h1>
-
-    </div>
-  <div id="cardGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
 </div>
 
 <script>
@@ -589,6 +573,24 @@
     })
     .catch(err => console.error("Error loading JSON:", err));
 </script>
+
+<script>
+  document.querySelectorAll('.marquee').forEach((marquee) => {
+    const root = document.documentElement;
+    const displayed = getComputedStyle(root).getPropertyValue("--marquee-elements-displayed");
+    const content = marquee.querySelector(".marquee-content");
+
+    root.style.setProperty("--marquee-elements", content.children.length);
+
+    for (let i = 0; i < displayed; i++) {
+      content.appendChild(content.children[i].cloneNode(true));
+    }
+  });
+</script>
+
+<!--MARQEES  -->
+
+
 
 
 
