@@ -384,128 +384,90 @@
       }); 
     }
 
-function drawTree(categoryName){
-  currentCategory = categoryName;
-  setActiveButton(categoryName);
+    function drawTree(categoryName){
+      currentCategory = categoryName;
+      setActiveButton(categoryName);
 
-  const container = document.querySelector('#tech-graph-container');
-  const width = container.clientWidth;
-  const height = container.clientHeight; // ✅ SAME AS BEFORE
+      const container = document.querySelector('#tech-graph-container');
+      const width = container.clientWidth;
+      //  controll svg height
+      const height = container.clientHeight; 
 
-  const svg = d3.select("svg");
-  svg.selectAll("*").remove();
 
-  /* === ROOT GROUP (fade + slight slide) === */
-  const g = svg.append("g")
-    .attr("transform", `translate(0,70)`)
-    .style("opacity", 0);
+      const svg = d3.select("svg");
+      svg.selectAll("*").remove();
 
-  g.transition()
-    .duration(500)
-    .ease(d3.easeCubicOut)
-    .style("opacity", 1)
-    .attr("transform", `translate(0,50)`);
+      const g = svg.append("g").attr("transform", `translate(0,50)`);
 
-  const category = categories.find(c => c.category === categoryName);
-  const data = { name: category.category, children: category.technologies };
-  const root = d3.hierarchy(data);
+      const category = categories.find(c=>c.category===categoryName);
+      const data = {name: category.category, children: category.technologies};
+      const root = d3.hierarchy(data);
 
-  const treeLayout = d3.tree().size([width, height - 100]); // ✅ SAME AS BEFORE
-  treeLayout(root);
+      const treeLayout = d3.tree().size([width, height-100]);
+      treeLayout(root);
 
-  const nodeRadius = width < 640 ? 20 : 30;
-  const iconSize = width < 640 ? 20 : 30;
-  const labelFont = width < 640 ? "10px" : "12px";
-  const labelOffset = width < 640 ? nodeRadius + 12 : nodeRadius + 15;
+      const nodeRadius = width<640?20:30;
+      const iconSize = width<640?20:30;
+      const labelFont = width<640?"10px":"12px";
+      const labelOffset = width<640?nodeRadius+12:nodeRadius+15;
 
-  /* === LINKS (draw animation only) === */
-  const links = g.selectAll(".link")
-    .data(root.links())
-    .enter()
-    .append("path")
-    .attr("class","link")
-    .attr("d", d3.linkVertical().x(d=>d.x).y(d=>d.y+15))
-    .attr("stroke-dasharray", function () {
-      const len = this.getTotalLength();
-      return `${len} ${len}`;
-    })
-    .attr("stroke-dashoffset", function () {
-      return this.getTotalLength();
+      g.selectAll(".link").data(root.links()).enter().append("path")
+        .attr("class","link")
+        .attr("d", d3.linkVertical().x(d=>d.x).y(d=>d.y+15));
+
+      const node = g.selectAll(".node").data(root.descendants()).enter()
+        .append("g").attr("class","node").attr("transform", d=>`translate(${d.x},${d.y})`);
+
+      node.filter(d=>d.depth===0).append("path").attr("d",hexagon(50)).attr("class","hexagon");
+      node.filter(d=>d.depth===0).append("text").attr("text-anchor","middle").attr("dy",5).text(d=>d.data.name);
+
+      const nodeGroup = node.filter(d=>d.depth>0)
+        .append("g")
+        .attr("class","group")
+        .style("cursor", "pointer");
+
+      nodeGroup.append("circle")
+        .attr("r", nodeRadius)
+        .attr("fill", "#ffffff")
+        .attr("stroke", "#ccc")
+        .attr("stroke-width", 2);
+
+      nodeGroup.filter(d=>d.data.icon).append("image")
+        .attr("xlink:href", d=>d.data.icon)
+        .attr("x",-iconSize/2)
+        .attr("y",-iconSize/2)
+        .attr("width", iconSize)
+        .attr("height", iconSize)
+        .on("click",(event,d)=>{ if(d.data.link) window.open(d.data.link,"_blank"); });
+
+      nodeGroup.on("mouseover", function() {
+          d3.select(this).select("circle").attr("stroke", "#000");
+      })
+      .on("mouseout", function() {
+          d3.select(this).select("circle").attr("stroke", "#ccc");
+      });
+
+      nodeGroup.append("text")
+        .attr("dy",labelOffset)
+        .attr("text-anchor","middle")
+        .style("font-size",labelFont)
+        .text(d=>d.data.name);
+    }
+
+    fetch("data/categories.json").then(res=>res.json()).then(data=>{
+      categories = data;
+      const buttonContainer = document.getElementById("buttons");
+      categories.forEach((cat, idx)=>{
+        const btn = document.createElement("button");
+        btn.className = "dtv-btn";
+        btn.setAttribute("data-category", cat.category);
+        btn.innerHTML = cat.category; // removed numbering
+        btn.onclick = ()=>drawTree(cat.category);
+        buttonContainer.appendChild(btn);
+      });
+      drawTree(categories[0].category);
+      window.addEventListener("resize", ()=>drawTree(currentCategory));
     });
-
-  links.transition()
-    .duration(600)
-    .delay((d,i)=> i * 40)
-    .ease(d3.easeCubicOut)
-    .attr("stroke-dashoffset", 0);
-
-  /* === NODES (staggered fade only) === */
-  const node = g.selectAll(".node")
-    .data(root.descendants())
-    .enter()
-    .append("g")
-    .attr("class","node")
-    .attr("transform", d=>`translate(${d.x},${d.y})`)
-    .style("opacity", 0);
-
-  node.transition()
-    .delay((d,i)=> i * 50)
-    .duration(350)
-    .ease(d3.easeCubicOut)
-    .style("opacity", 1);
-
-  /* === ROOT NODE === */
-  node.filter(d=>d.depth===0)
-    .append("path")
-    .attr("d",hexagon(50))
-    .attr("class","hexagon");
-
-  node.filter(d=>d.depth===0)
-    .append("text")
-    .attr("text-anchor","middle")
-    .attr("dy",5)
-    .text(d=>d.data.name);
-
-  /* === CHILD NODES === */
-  const nodeGroup = node.filter(d=>d.depth>0)
-    .append("g")
-    .style("cursor","pointer");
-
-  nodeGroup.append("circle")
-    .attr("r", nodeRadius)
-    .attr("fill", "#ffffff")
-    .attr("stroke", "#ccc")
-    .attr("stroke-width", 2);
-
-  nodeGroup.filter(d=>d.data.icon)
-    .append("image")
-    .attr("xlink:href", d=>d.data.icon)
-    .attr("x",-iconSize/2)
-    .attr("y",-iconSize/2)
-    .attr("width", iconSize)
-    .attr("height", iconSize)
-    .on("click",(e,d)=>{
-      if(d.data.link) window.open(d.data.link,"_blank");
-    });
-
-  nodeGroup
-    .on("mouseover", function() {
-      d3.select(this).select("circle")
-        .transition().duration(120)
-        .attr("stroke", "#000");
-    })
-    .on("mouseout", function() {
-      d3.select(this).select("circle")
-        .transition().duration(120)
-        .attr("stroke", "#ccc");
-    });
-
-  nodeGroup.append("text")
-    .attr("dy",labelOffset)
-    .attr("text-anchor","middle")
-    .style("font-size",labelFont)
-    .text(d=>d.data.name);
-}
 
     // // === Education Timeline ===
     // fetch("data/education.json")
