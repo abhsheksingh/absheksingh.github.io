@@ -1,1 +1,390 @@
 
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Allerta+Stencil&display=swap" rel="stylesheet">
+
+  <link href="./css/style.css" rel="stylesheet"> 
+
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <script src="./css/tailwind.all.js"></script>
+
+   
+  <title>Abhishek Singh</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/d3-milestones/build/d3-milestones.css">
+  <script src="https://unpkg.com/d3-milestones/build/d3-milestones.min.js"></script>
+
+</head>
+
+
+  <style>
+
+  .allerta-stencil-regular {
+  font-family: "Allerta Stencil", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+#navbar-nav  .active { 
+    border-bottom: 1px solid black;
+}
+#nav li a:hover { 
+    border-bottom: 0.5px solid black;
+
+}
+@media only screen and (max-width: 600px) {
+
+  #navbar-nav  .active { 
+    border-bottom: 1px solid white;
+}
+#nav li a:hover { 
+    border-bottom: 0.5px solid white;
+}
+
+}
+#social li a:hover{
+  border-bottom: 0.5px solid white;
+}
+
+</style>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal m-0 sm:m-5 ">
+  
+  <div class="bg-white" id="nav">
+    <header class="sticky top-0 z-30 w-full bg-white sm:px-4  border-b-[0.1px] border-b-slate-200 shadow-sm ">
+      <div class="flex items-center justify-between mx-auto max-w-7xl">
+        <a href="#">
+          <span class="text-2xl font-extrabold text-sky-800 "><img class="W-100 ml-2" src="assets/images/absbonw.svg" wiidth="60px"alt=""></span>
+        </a>
+        <div class="flex items-center space-x-1">
+          <!-- <ul class="hidden space-x-2 md:inline-flex">
+            <li><a href="#" class="px-4 py-2 font-semibold text-gray-600 rounded">Home</a></li>
+            <li><a href="#" class="px-4 py-2 font-semibold text-gray-600 rounded">Blogs</a></li>
+            <li><a href="#" class="px-4 py-2 font-semibold text-gray-600 rounded">About Us</a></li>
+            <li><a href="#" class="px-4 py-2 font-semibold text-gray-600 rounded">Contact Us</a></li>
+  
+          </ul> -->
+
+
+          <button id="toggle-menu-button" class="z-50 lg:hidden relative m-5">
+            <span class="sr-only">Toggle Menu</span>
+            <div id="open" class="h-7 flex flex-col items-end justify-between ">
+              <span class="block h-0.5 w-8 bg-slate-900 rounded-full mr-4"></span>
+            <span class="block h-0.5 w-6 bg-slate-900 rounded-full mr-4"></span>
+            <span class="block h-0.5 w-8 bg-slate-900 rounded-full mr-4"></span>
+            </div>
+            <div  id="close" class="hidden h-7 flex flex-col items-end justify-between">
+              <span class="block h-0.5 w-8 bg-white rounded-full origin-left transform rotate-45 translate-y-0.5"></span>
+            <span class="block h-0.5 w-8 bg-white rounded-full origin-left transform -rotate-45 -translate-y-0.5"></span>
+            </div>
+          </button>
+          <div id="toggle-menu" class="hidden lg:block font-bold text-white text-right text-3xl bg-gray-800 fixed top-0 left-0 h-screen w-screen flex flex-col items-center justify-center lg:text-lg lg:relative lg:text-slate-900 lg:bg-transparent lg:w-auto lg:h-auto lg:text-left">
+            <ul class="flex flex-col gap-y-7 lg:flex-row lg:gap-2">
+            <!-- <li class="lg:px-4 ">
+              <a href="index.html" class="transition ease-in-out duration-150 "></a></li>
+            <li class="lg:px-4">
+              <a href="project.html"  class="transition ease-in-out duration-150 "></a>
+            </li>
+            <li class="lg:px-4">
+              <a href="" class="transition ease-in-out duration-150 "></a>
+            </li> -->
+            <!-- <li class="lg:px-4 text-center" id="navbar-nav">
+              
+              <a href="careers.html" class="transition ease-in-out duration-150 active">Careers</a>
+            </li> -->
+            <li class="lg:px-4 relative flex items-center text-center group" >
+                  <a href="abhsheksingh" target="_blank" class="transition ease-in-out duration-150">
+                    <img 
+                      src="icons/project.svg" 
+                      class="w-9 h-9 invert lg:invert-0" 
+                      alt="GitHub"
+                    /> 
+                  </a>
+                  <!-- Tooltip centered above the icon -->
+                  <span class="absolute bottom-full left-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2 -translate-x-1/2 whitespace-nowrap">
+                    Projects
+                  </span>
+            </li>
+
+            <li class="lg:px-4 relative flex items-center group" >
+                  <a href="https://github.com/abhsheksingh" target="_blank" class="transition ease-in-out duration-150">
+                    <img 
+                      src="icons/github.svg" 
+                      class="w-8 h-8 invert lg:invert-0" 
+                      alt="GitHub"
+                    />
+                  </a>
+                  <!-- Tooltip centered above the icon -->
+                  <span class="absolute bottom-full left-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2 -translate-x-1/2 whitespace-nowrap">
+                  GitHub
+                  </span>
+            </li>
+            <li class="lg:px-4 relative flex items-center group" >
+                  <a href="https://www.linkedin.com/in/abhishek-singh-214a0a146/" target="_blank" class="transition ease-in-out duration-150">
+                    <img 
+                      src="icons/linkdns.svg" 
+                      class="w-8 h-8  invert lg:invert-0" 
+                      alt="LinkedIn"
+                    />
+                  </a>
+                  <!-- Tooltip centered above the icon -->
+                  <span class="absolute bottom-full left-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2 -translate-x-1/2 whitespace-nowrap">
+                  LinkedIn
+                  </span>
+            </li>
+
+
+
+            <!-- <li class="lg:border-r lg:px-4 lg:border-slate-900">
+              <a href="team.html" title"Go to XXX" class="transition ease-in-out duration-150 ">Meet Team</a>
+            </li> -->
+            <!-- <li class="lg:px-4">
+              <a href=""  class="transition ease-in-out duration-150 "></a>
+            </li> -->
+          </ul>
+          </div>
+
+        </div>
+      </div>
+    </header>
+  
+    <section class=" mx-auto max-w-screen-xl bg-white">
+
+    </section>
+   
+
+  <h1 class="py-8 text-center text-3xl font-bold uppercase">Projects</h1>
+</div>
+
+
+<div class="content-center w-full bg-white mx-auto max-w-7xl">
+  <!-- Summary -->
+  <div class="p-4 sm:p-6 md:p-8 mb-6 text-black rounded-lg first-letter:text-3xl text-justify"">
+<p>Coming soon .... </p> 
+  </div>
+
+
+
+  
+
+
+
+
+
+  
+
+
+    
+</div>
+  
+</div>
+
+
+</div>
+
+
+</div>
+
+<div class="flex py-10 w-7xl bg-white"></div>
+
+<footer aria-label="Site Footer" class="bg-black text-white">
+  <div class="mx-auto max-w-screen-xl px-4 pb-6 pt-16 sm:px-6 lg:px-8 lg:pt-24">
+    <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+      <div>
+        <div class="flex justify-center text-white sm:justify-start ">
+          <img src="assets/images/abswonb.svg" class="w-14" alt="" />
+        </div>
+
+          <div class="flex justify-center text-white sm:justify-start ">
+          
+        <p
+          class="mt-6 max-w-md text-center leading-relaxed  text-white sm:max-w-xs sm:text-left"
+        > sighabh@gmail.com
+          
+        </p>
+        </div>
+
+
+<ul id="social" class="mt-8 flex justify-center gap-6 sm:justify-start md:gap-8">
+  <li>
+    <a href="/" rel="noreferrer" target="_blank" class="flex items-center justify-center w-10 h-10">
+      <span class="sr-only">Projects</span>
+      <img src="icons/project.svg" class="w-full h-full object-contain invert" alt="Projects"/> 
+    </a>
+  </li>
+
+  <li>
+    <a href="https://github.com/abhsheksingh" rel="noreferrer" target="_blank" class="flex items-center justify-center w-10 h-10">
+      <span class="sr-only">GitHub</span>
+      <img src="icons/github.svg" class="w-full h-full object-contain invert" alt="GitHub"/> 
+    </a>
+  </li>
+
+  <li>
+    <a href="https://www.linkedin.com/in/abhishek-singh-214a0a146/" rel="noreferrer" target="_blank" class="flex items-center justify-center w-10 h-10">
+      <span class="sr-only">LinkedIn</span>
+      <img src="icons/linkdns.svg" class="w-full h-full object-contain invert" alt="LinkedIn"/> 
+    </a>
+  </li>
+</ul>
+
+</div>
+
+      <div
+        class="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-4 lg:col-span-2"
+      >
+        <div class="text-center sm:text-left">
+          <p class="text-lg font-medium text-gray-100"></p>
+
+        </div>
+
+        <div class="text-center sm:text-left">
+          <p class="text-lg font-medium text-gray-100 text-center"></p>
+
+        </div>
+
+        <div class="text-center sm:text-left">
+          <p class="text-lg font-medium text-gray-200"></p>
+
+          <ul class="mt-8 space-y-4 text-sm">
+            <li>
+              <a
+                class="flex items-center justify-center gap-1.5 ltr:sm:justify-start rtl:sm:justify-end"
+                href="/"
+              >
+
+                <span class="flex-1 text-gray-200"></span>
+              </a>
+            </li>
+
+            <li>
+              <a
+                class="flex items-center justify-center gap-1.5 ltr:sm:justify-start rtl:sm:justify-end"
+                href="/"
+              >
+                <span class="flex-1 text-gray-200"></span>
+              </a>
+            </li>
+
+            <li
+              class="flex items-start justify-center gap-1.5 ltr:sm:justify-start rtl:sm:justify-end"
+            >
+              <address class="-mt-0.5 flex-1 not-italic text-gray-7200 font-bold">
+                United Kingdom
+               
+              </address>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-12 border-t border-gray-100 pt-6">
+      <div class="text-center sm:flex sm:justify-between sm:text-left">
+        <p class="text-sm text-gray-300">
+          <span class="block sm:inline"></span>
+
+          <a
+            class="inline-block text-teal-600 underline transition hover:text-teal-600/75"
+            href="/"
+          >
+            
+          </a>
+
+          <span>&middot;</span>
+
+          <a
+            class="inline-block text-teal-600 underline transition hover:text-teal-600/75"
+            href="/"
+          >
+            
+          </a>
+        </p>
+
+        <p class="mt-4 text-sm text-white sm:order-first sm:mt-0">
+           Abhishek Singh &copy; <script>document.write(new Date().getFullYear());</script>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  var TxtType = function(el, toRotate, period) {
+        this.toRotate = toRotate;
+        this.el = el;
+        this.loopNum = 0;
+        this.period = parseInt(period, 10) || 2000;
+        this.txt = '';
+        this.tick();
+        this.isDeleting = false;
+    };
+
+    TxtType.prototype.tick = function() {
+        var i = this.loopNum % this.toRotate.length;
+        var fullTxt = this.toRotate[i];
+
+        if (this.isDeleting) {
+        this.txt = fullTxt.substring(0, this.txt.length - 1);
+        } else {
+        this.txt = fullTxt.substring(0, this.txt.length + 1);
+        }
+
+        this.el.innerHTML = '<span class="wrap">'+this.txt+'</span>';
+
+        var that = this;
+        var delta = 200 - Math.random() * 100;
+
+        if (this.isDeleting) { delta /= 2; }
+
+        if (!this.isDeleting && this.txt === fullTxt) {
+        delta = this.period;
+        this.isDeleting = true;
+        } else if (this.isDeleting && this.txt === '') {
+        this.isDeleting = false;
+        this.loopNum++;
+        delta = 500;
+        }
+
+        setTimeout(function() {
+        that.tick();
+        }, delta);
+    };
+
+    window.onload = function() {
+        var elements = document.getElementsByClassName('typewrite');
+        for (var i=0; i<elements.length; i++) {
+            var toRotate = elements[i].getAttribute('data-type');
+            var period = elements[i].getAttribute('data-period');
+            if (toRotate) {
+              new TxtType(elements[i], JSON.parse(toRotate), period);
+            }
+        }
+        // INJECT CSS
+        var css = document.createElement("style");
+        css.type = "text/css";
+        css.innerHTML = ".typewrite > .wrap { border-right: 0.08em solid #fff}";
+        document.body.appendChild(css);
+    };
+</script>
+
+<Script>
+  var button = document.querySelector('#toggle-menu-button');
+  var menu = document.querySelector('#toggle-menu');
+  var open = document.querySelector('#open');
+  var close = document.querySelector('#close');
+
+  button.addEventListener('click', (e)=>{
+    menu.classList.toggle('hidden');
+    open.classList.toggle('hidden');
+    close.classList.toggle('hidden');
+  });
+</Script>
+<script src="js/jquery.min.js"></script>
+  </body>
+</html>
