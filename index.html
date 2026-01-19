@@ -60,7 +60,7 @@
     .milestone-detail { font-size: 12px; fill: #555; }
 
     /* Responsive height adjustments for the Tech Stack graph */
-    @media (max-width: 640px) {
+    /* @media (max-width: 640px) {
       #tech-graph-container { padding-bottom: 120% !important; }
     }
     @media (min-width: 641px) and (max-width: 1024px) {
@@ -68,7 +68,7 @@
     }
     @media (min-width: 1025px) {
       #tech-graph-container { padding-bottom: 50% !important; }
-    }
+    } */
  
   .allerta-stencil-regular {
   font-family: "Allerta Stencil", sans-serif;
@@ -332,7 +332,7 @@
       Familiar Technology Stacks
     </h1>
     <div id="buttons" class="flex flex-wrap justify-center gap-2 sm:gap-3 mb-4 sm:mb-6"></div>
-    <div id="tech-graph-container" class="relative w-full pb-[70%]">
+    <div id="tech-graph-container" class="relative w-full pb-[120%] min-[641px]:pb-[90%] min-[1025px]:pb-[50%] min-[1080px]:pb-[40%]">
       <svg class="absolute inset-0 w-full h-full"></svg>
     </div>
   </div>
