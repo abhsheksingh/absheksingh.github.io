@@ -537,46 +537,46 @@ fetch("data/categories.json")
     window.addEventListener("resize", ()=>drawTree(currentCategory));
   });
 
-    // // === Education Timeline ===
-    // fetch("data/education.json")
-    //   .then(res => res.json())
-    //   .then(eduMilestones => {
-    //     const chart = milestones('#education-timeline')
-    //       .mapping({ timestamp: 'year', text: 'title' })
-    //       .parseTime('%Y')
-    //       .aggregateBy('year')
-    //       .orientation('horizontal')
-    //       .distribution('top-bottom')
-    //       .autoResize(true)
-    //       .optimize(true)
-    //       .render(eduMilestones);
+    // === Education Timeline ===
+    fetch("data/education.json")
+      .then(res => res.json())
+      .then(eduMilestones => {
+        const chart = milestones('#education-timeline')
+          .mapping({ timestamp: 'year', text: 'title' })
+          .parseTime('%Y')
+          .aggregateBy('year')
+          .orientation('horizontal')
+          .distribution('top-bottom')
+          .autoResize(true)
+          .optimize(true)
+          .render(eduMilestones);
 
-    //     chart.svg.selectAll('.milestones-item text').each(function(d, i){
-    //       const el = d3.select(this);
-    //       el.text("");
+        chart.svg.selectAll('.milestones-item text').each(function(d, i){
+          const el = d3.select(this);
+          el.text("");
 
-    //       el.append('tspan')
-    //         .attr('class','milestone-title')
-    //         .attr('x', 0)
-    //         .attr('dy', 0)
-    //         .text(eduMilestones[i].title);
+          el.append('tspan')
+            .attr('class','milestone-title')
+            .attr('x', 0)
+            .attr('dy', 0)
+            .text(eduMilestones[i].title);
 
-    //       el.append('tspan')
-    //         .attr('class','milestone-detail')
-    //         .attr('x', 0)
-    //         .attr('dy', '1.2em')
-    //         .text(eduMilestones[i].detail);
+          el.append('tspan')
+            .attr('class','milestone-detail')
+            .attr('x', 0)
+            .attr('dy', '1.2em')
+            .text(eduMilestones[i].detail);
 
-    //       if (eduMilestones[i].icon) {
-    //         chart.svg.append("image")
-    //           .attr("xlink:href", eduMilestones[i].icon)
-    //           .attr("width", 24)
-    //           .attr("height", 24)
-    //           .attr("x", d.x ? d.x - 12 : 0)
-    //           .attr("y", d.y ? d.y - 40 : 0);
-    //       }
-    //     });
-    //   });
+          if (eduMilestones[i].icon) {
+            chart.svg.append("image")
+              .attr("xlink:href", eduMilestones[i].icon)
+              .attr("width", 24)
+              .attr("height", 24)
+              .attr("x", d.x ? d.x - 12 : 0)
+              .attr("y", d.y ? d.y - 40 : 0);
+          }
+        });
+      });
   </script>
 <!--  TECK STACK BLOCK-->
 
