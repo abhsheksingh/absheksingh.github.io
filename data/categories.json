@@ -2,12 +2,18 @@
   {
     "category": "Programming",
     "technologies": [
-      { "name": "Python", "icon": "icons/python.svg", "link": "https://www.python.org/" },
-      { "name": "R", "icon": "icons/r.svg", "link": "https://www.r-project.org/" },
+      { "name": "Python", "icon": "icons/python.svg", "link": "https://www.python.org/",
+          "children":[
+              { "name": "Flask", "icon": "icons/flask.svg", "link": "https://developer.mozilla.org/en-US/docs/Web/JavaScript" },
+              { "name": "Streamlit", "icon": "icons/streamlit.svg", "link": "https://developer.mozilla.org/en-US/docs/Web/HTML" },
+              { "name": "FastAPI", "icon": "icons/fastapi.svg", "link": "https://developer.mozilla.org/en-US/docs/Web/HTML" },
+              { "name": "Django", "icon": "icons/django.svg", "link": "https://developer.mozilla.org/en-US/docs/Web/HTML" }
+          ]
+  },
+      { "name": "PySpark", "icon": "icons/spark.svg", "link": "https://www.r-project.org/" },
+      { "name": "SQL", "icon": "icons/sql.svg", "link": "https://www.php.net/" },
       { "name": "JavaScript", "icon": "icons/javascript.svg", "link": "https://developer.mozilla.org/en-US/docs/Web/JavaScript" },
-      { "name": "HTML", "icon": "icons/html.svg", "link": "https://developer.mozilla.org/en-US/docs/Web/HTML" },
-      { "name": "CSS", "icon": "icons/css.svg", "link": "https://developer.mozilla.org/en-US/docs/Web/CSS" },
-      { "name": "PHP", "icon": "icons/php.svg", "link": "https://www.php.net/" }
+      { "name": "HTML | CSS", "icon": "icons/html.svg", "link": "https://developer.mozilla.org/en-US/docs/Web/HTML" }
     ]
   },
   {

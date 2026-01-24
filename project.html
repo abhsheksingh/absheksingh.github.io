@@ -51,7 +51,71 @@
 #social li a:hover{
   border-bottom: 0.5px solid white;
 }
+/*book*/
+/* From Uiverse.io by eslam-hany */ 
+.book {
+  position: relative;
+  border-radius: 10px;
+  width: 220px;
+  height: 300px;
+  background-color: whitesmoke;
+  -webkit-box-shadow: 1px 1px 12px #000;
+  box-shadow: 1px 1px 12px #000;
+  -webkit-transform: preserve-3d;
+  -ms-transform: preserve-3d;
+  transform: preserve-3d;
+  -webkit-perspective: 2000px;
+  perspective: 2000px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  color: #000;
+}
 
+.cover {
+  top: 0;
+  position: absolute;
+  background-color: rgb(255, 255, 255);
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  cursor: pointer;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  -webkit-transform-origin: 0;
+  -ms-transform-origin: 0;
+  transform-origin: 0;
+  -webkit-box-shadow: 1px 1px 8px #000;
+  box-shadow: 1px 1px 8px #000;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.book:hover .cover {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  -webkit-transform: rotatey(-80deg);
+  -ms-transform: rotatey(-80deg);
+  transform: rotatey(-80deg);
+}
+
+p {
+  font-size: 20px;
+  font-weight: bolder;
+}
 </style>
 <body class="bg-gray-100 font-sans leading-normal tracking-normal m-0 sm:m-5 ">
   
@@ -162,15 +226,186 @@
 
 
 
- <div class="content-center w-full bg-white mx-auto max-w-7xl">
-  <!-- Summary -->
-  <div class="p-4 sm:p-6 md:p-8 mb-6 text-black rounded-lg first-letter:text-3xl text-justify">
-		<p>Coming soon .... </p> 
+<section class="px-4 py-16 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-7xl">
+    <div id="projectsGrid" class="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3"></div>
   </div>
+</section>
+
+<!-- MODALS -->
+<div id="modalsContainer"></div>
+
+<!-- FULLSCREEN IMAGE VIEW -->
+<div id="imageViewer" class="fixed inset-0 hidden z-[999] bg-black flex items-center justify-center p-4">
+  <button onclick="closeImage()" 
+    class="absolute top-4 right-4 w-12 h-12 rounded-full bg-white text-black flex items-center justify-center text-3xl font-bold leading-none">
+    ×
+  </button>
+  <img id="fullImage" class="max-w-full max-h-full border-2 border-white rounded-lg">
+</div>
+
+<script>
+fetch('data/projects.json')
+  .then(res => res.json())
+  .then(projects => {
+    const grid = document.getElementById('projectsGrid');
+    const modals = document.getElementById('modalsContainer');
+
+    projects.forEach(project => {
+
+      // ===== CREATE PROJECT CARD =====
+      const card = document.createElement('div');
+      card.className = "group relative overflow-hidden rounded-xl border-2 border-black shadow-lg hover:shadow-xl transition";
+
+      card.innerHTML = `
+        <div class="h-64 overflow-hidden">
+          <img src="${project.images[0]}" class="h-full w-full object-cover transition group-hover:scale-110">
+        </div>
+
+        <div class="absolute inset-0 flex items-end bg-gradient-to-t from-white/95 to-transparent backdrop-blur-sm p-6 opacity-0 group-hover:opacity-100 transition">
+          <div class="translate-y-8 group-hover:translate-y-0 transition text-black">
+            <h3 class="text-2xl font-bold">${project.title}</h3>
+            <p class="mt-2 text-gray-700">${project.description.substring(0, 70)}...</p>
+
+            <button onclick="openModal('${project.id}')" class="mt-4 font-semibold hover:underline">
+              View Project →
+            </button>
+          </div>
+        </div>
+      `;
+
+      grid.appendChild(card);
+
+      // ===== CREATE MODAL =====
+      const modal = document.createElement('div');
+      modal.id = project.id;
+      modal.className = "fixed inset-0 hidden z-50 flex items-center justify-center bg-black/50 p-4";
+
+      modal.innerHTML = `
+        <div class="bg-white max-w-6xl w-full max-h-[95vh] overflow-auto rounded-xl shadow-xl relative">
+
+          <!-- CLOSE BUTTON -->
+          <button onclick="closeModal('${project.id}')" 
+            class="absolute top-4 right-4 w-10 h-10 rounded-full bg-black text-white flex items-center justify-center text-2xl font-bold leading-none hover:scale-105 transition">
+            ×
+          </button>
+
+          <div class="grid lg:grid-cols-2 gap-6 p-6">
+
+            <!-- IMAGE GALLERY -->
+            <div class="space-y-4">
+
+              <!-- MAIN IMAGE -->
+              <div class="border-2 border-black rounded-lg overflow-hidden cursor-zoom-in">
+                <img id="main-${project.id}" src="${project.images[0]}" 
+                     onclick="expandImage(this.src)" 
+                     class="w-full h-[420px] object-contain bg-white">
+              </div>
+
+              <!-- THUMBNAIL STRIP -->
+              <div class="relative">
+
+                <!-- LEFT ARROW -->
+                <button onclick="scrollGallery('${project.id}', -200)" 
+                  class="absolute left-0 top-1/2 -translate-y-1/2 bg-black text-white w-8 h-8 rounded-full flex items-center justify-center z-10">
+                  ‹
+                </button>
+
+                <!-- SCROLLABLE CONTAINER -->
+                <div id="gallery-${project.id}" 
+                  class="flex gap-3 overflow-x-auto scroll-smooth px-10 py-2">
+
+                  ${project.images.map(img => `
+                    <img src="${img}" onclick="switchImage('${project.id}', '${img}')"
+                         class="w-24 h-24 object-cover border-2 border-black cursor-pointer hover:opacity-70 transition shrink-0">
+                  `).join("")}
+
+                </div>
+
+                <!-- RIGHT ARROW -->
+                <button onclick="scrollGallery('${project.id}', 200)" 
+                  class="absolute right-0 top-1/2 -translate-y-1/2 bg-black text-white w-8 h-8 rounded-full flex items-center justify-center z-10">
+                  ›
+                </button>
+
+              </div>
+            </div>
+
+            <!-- PROJECT INFO -->
+            <div class="space-y-5 text-black">
+
+              <h2 class="text-3xl font-bold">${project.title}</h2>
+
+              <!-- SVG ICONS -->
+              <div class="flex flex-wrap gap-4">
+                ${project.icons.map(icon => `
+                  <img src="${icon}" class="w-9 h-9 border border-black p-1 rounded">
+                `).join("")}
+              </div>
+
+              <!-- TAGS -->
+              <div class="flex flex-wrap gap-2">
+                ${project.tags.map(tag => `
+                  <span class="border border-black px-3 py-1 text-sm">${tag}</span>
+                `).join("")}
+              </div>
+
+              <!-- DESCRIPTION -->
+              <p class="text-gray-700 leading-relaxed">
+                ${project.description}
+              </p>
+
+            </div>
+
+          </div>
+        </div>
+      `;
+
+      modals.appendChild(modal);
+
+      // Close when clicking outside modal content
+      modal.addEventListener('click', e => {
+        if (e.target === modal) closeModal(project.id);
+      });
+
+    });
+  });
+
+function openModal(id) {
+  document.getElementById(id).classList.remove('hidden');
+  document.body.classList.add('overflow-hidden');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.add('hidden');
+  document.body.classList.remove('overflow-hidden');
+}
+
+function switchImage(projectId, img) {
+  document.getElementById(`main-${projectId}`).src = img;
+}
+
+function scrollGallery(id, amount) {
+  document.getElementById(`gallery-${id}`).scrollBy({
+    left: amount,
+    behavior: 'smooth'
+  });
+}
+
+function expandImage(src) {
+  document.getElementById('imageViewer').classList.remove('hidden');
+  document.getElementById('fullImage').src = src;
+}
+
+function closeImage() {
+  document.getElementById('imageViewer').classList.add('hidden');
+}
+</script>
 
 
- <!-- content coming soon ! -->
- 
+
+
+
 </div>
 </div>  
 </div>  
