@@ -232,7 +232,7 @@ p {
   </div>
 </section>
 
-<!-- MODALS -->
+<!-- MODALS CONTAINER -->
 <div id="modalsContainer"></div>
 
 <!-- FULLSCREEN IMAGE VIEW -->
@@ -262,8 +262,10 @@ fetch('data/projects.json')
           <img src="${project.images[0]}" class="h-full w-full object-cover transition group-hover:scale-110">
         </div>
 
-        <div class="absolute inset-0 flex items-end bg-gradient-to-t from-white/95 to-transparent backdrop-blur-sm p-6 opacity-0 group-hover:opacity-100 transition">
-          <div class="translate-y-8 group-hover:translate-y-0 transition text-black">
+        <!-- OVERLAY -->
+        <div class="absolute inset-0 flex items-end bg-gradient-to-t from-white/95 to-transparent backdrop-blur-sm p-6 
+                    opacity-100 md:opacity-0 group-hover:opacity-100 transition">
+          <div class="translate-y-0 md:translate-y-8 md:group-hover:translate-y-0 transition text-black">
             <h3 class="text-2xl font-bold">${project.title}</h3>
             <p class="mt-2 text-gray-700">${project.description.substring(0, 70)}...</p>
 
@@ -302,7 +304,7 @@ fetch('data/projects.json')
                      class="w-full h-[420px] object-contain bg-white">
               </div>
 
-              <!-- THUMBNAIL STRIP -->
+              <!-- THUMBNAIL STRIP WITH SCROLL -->
               <div class="relative">
 
                 <!-- LEFT ARROW -->
@@ -312,14 +314,11 @@ fetch('data/projects.json')
                 </button>
 
                 <!-- SCROLLABLE CONTAINER -->
-                <div id="gallery-${project.id}" 
-                  class="flex gap-3 overflow-x-auto scroll-smooth px-10 py-2">
-
+                <div id="gallery-${project.id}" class="flex gap-3 overflow-x-auto scroll-smooth px-10 py-2">
                   ${project.images.map(img => `
                     <img src="${img}" onclick="switchImage('${project.id}', '${img}')"
                          class="w-24 h-24 object-cover border-2 border-black cursor-pointer hover:opacity-70 transition shrink-0">
                   `).join("")}
-
                 </div>
 
                 <!-- RIGHT ARROW -->
@@ -363,7 +362,7 @@ fetch('data/projects.json')
 
       modals.appendChild(modal);
 
-      // Close when clicking outside modal content
+      // Close modal when clicking outside
       modal.addEventListener('click', e => {
         if (e.target === modal) closeModal(project.id);
       });
@@ -371,6 +370,7 @@ fetch('data/projects.json')
     });
   });
 
+// ===== FUNCTIONS =====
 function openModal(id) {
   document.getElementById(id).classList.remove('hidden');
   document.body.classList.add('overflow-hidden');
@@ -401,7 +401,6 @@ function closeImage() {
   document.getElementById('imageViewer').classList.add('hidden');
 }
 </script>
-
 
 
 
