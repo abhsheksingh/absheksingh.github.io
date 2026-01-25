@@ -1,11 +1,26 @@
-[
+[  
   {
     "id": "project1",
+    "title": "Git Graph - GitHub Action",
+    "images": [
+      "assets/images/g1.png",
+      "assets/images/demo.gif"
+    ],
+    "description": "Automatically generate and embed a visual folder structure graph in your README.md file using GitHub Actions.",
+    "tags": ["GitHub Action","GitHub Marketplace","Git Workflow"],
+    "link": "https://github.com/marketplace/actions/git-graph-for-repository",
+    "icons": [
+      "icons/git.svg",
+      "icons/github.svg"
+    ]
+  },
+  {
+    "id": "project6",
     "title": "Top 5 Movie Recommender",
     "images": [
       "assets/images/reco.png"
     ],
-    "description": "Implemented a Movie recommender, which give top 5 related movies based on one movie you liked.",
+    "description": "Implemented a Movie recommender, which give top 5 related movies based on one movie you liked. This model uses attributes such as genre, director, description, actors, etc, for movies, to make suggestions for the users. The intuition behind this type of recommendation system is that if a user liked a particular movie or show, he/she might like a movie or a show similar to it.",
     "tags": ["Docker", "Stremlit", "Flask"],
     "icons": [
       "icons/streamlit.svg",
@@ -13,7 +28,24 @@
       "icons/docker.svg"
     ]
   },
-
+  {
+    "id": "project5",
+    "title": "Portfolio - Website for Local Business",
+    "images": [
+      "assets/images/s1.png",
+      "assets/images/s2.png",
+      "assets/images/s3.png",
+      "assets/images/s4.png",
+      "assets/images/s5.png"
+    ],
+    "description": "Build portfolio website for a Business.",
+    "tags": ["Docker", "Stremlit", "Flask"],
+    "icons": [
+      "icons/streamlit.svg",
+      "icons/flask.svg",
+      "icons/docker.svg"
+    ]
+  },
   {
     "id": "project4",
     "title": "LIMS application - BioGrad",
