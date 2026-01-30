@@ -1,0 +1,18 @@
+[
+  {
+    "id": "cert1",
+    "title": "Data Migration Learning Plan",
+    "thumbnail": "assets/pdf/awscf-thumbnail.jpg",
+    "image": "assets/pdf/awsdm.pdf",
+    "issuer": "AWS",
+    "date": "Jan 2022"
+  },
+  {
+    "id": "cert2",
+    "title": "Cloud Practioner Essentials",
+    "thumbnail": "assets/pdf/awscf-thumbnail.jpg",
+    "image": "assets/pdf/awscf.pdf",
+    "issuer": "AWS",
+    "date": "Mar 2023"
+  }
+]
