@@ -233,12 +233,12 @@
         card.className =
           "group relative overflow-hidden rounded-xl border-2 border-black shadow-lg hover:shadow-xl transition cursor-pointer bg-white";
 
-        // Card canvas container
+        // Container for card PDF
         const canvasContainer = document.createElement("div");
-        canvasContainer.className = "h-64 bg-gray-100 flex items-center justify-center overflow-hidden";
+        canvasContainer.className = "relative h-64 w-full overflow-hidden bg-gray-100";
 
         const cardCanvas = document.createElement("canvas");
-        cardCanvas.className = "w-full h-full object-cover pointer-events-none object-cover";
+        cardCanvas.className = "absolute top-0 left-0 w-full h-full object-cover pointer-events-none";
         canvasContainer.appendChild(cardCanvas);
         card.appendChild(canvasContainer);
 
@@ -256,16 +256,34 @@
                                 <p class="text-sm text-gray-700">${cert.issuer} • ${cert.date}</p>`;
         card.appendChild(mobileText);
 
-        // Render first page of PDF at high-DPI for sharpness
+        // Render first page of PDF to fully cover the card
         pdfjsLib.getDocument(cert.image).promise.then(pdf => {
           pdf.getPage(1).then(page => {
             const dpi = window.devicePixelRatio || 1;
-            const viewport = page.getViewport({ scale: 0.3 * dpi }); // small thumbnail but high-res
-            cardCanvas.width = viewport.width;
-            cardCanvas.height = viewport.height;
-            cardCanvas.style.width = `${viewport.width / dpi}px`;
-            cardCanvas.style.height = `${viewport.height / dpi}px`;
-            page.render({ canvasContext: cardCanvas.getContext("2d"), viewport: viewport });
+
+            // Card container dimensions
+            const cardWidth = canvasContainer.clientWidth;
+            const cardHeight = canvasContainer.clientHeight;
+
+            // PDF viewport at scale 1
+            const viewport = page.getViewport({ scale: 1 });
+
+            // Compute scale to cover entire card (like object-cover)
+            const scaleX = cardWidth / viewport.width;
+            const scaleY = cardHeight / viewport.height;
+            const finalScale = Math.max(scaleX, scaleY) * dpi;
+
+            const finalViewport = page.getViewport({ scale: finalScale });
+
+            cardCanvas.width = finalViewport.width;
+            cardCanvas.height = finalViewport.height;
+            cardCanvas.style.width = `${finalViewport.width / dpi}px`;
+            cardCanvas.style.height = `${finalViewport.height / dpi}px`;
+
+            page.render({
+              canvasContext: cardCanvas.getContext("2d"),
+              viewport: finalViewport
+            });
           });
         });
 
@@ -312,6 +330,7 @@
     renderPDF(certificates[currentCertIndex].image);
   }
 </script>
+
 
 
 
