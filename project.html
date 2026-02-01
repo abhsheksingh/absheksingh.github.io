@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -10,14 +11,10 @@
 
   <link href="./css/style.css" rel="stylesheet"> 
 
-  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <script src="./css/tailwind.all.js"></script>
 
    
   <title>Abhishek Singh</title>
-  <script src="https://d3js.org/d3.v7.min.js"></script>
-  <link rel="stylesheet" href="https://unpkg.com/d3-milestones/build/d3-milestones.css">
-  <script src="https://unpkg.com/d3-milestones/build/d3-milestones.min.js"></script>
 
 </head>
 
@@ -51,10 +48,6 @@
 #social li a:hover{
   border-bottom: 0.5px solid white;
 }
-
-
-
-
 
 </style>
 <body class="bg-gray-100 font-sans leading-normal tracking-normal m-0 sm:m-5 ">
@@ -346,7 +339,6 @@
 
 
 
-
 </div>
 </div>  
 </div>  
@@ -361,7 +353,7 @@
     <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
       <div>
         <div class="flex justify-center text-white sm:justify-start ">
-          <a href="./index.html">
+            <a href="./index.html">
           <img src="assets/images/abswonb.svg" class="w-14" alt="" /></a>
         </div>
 
@@ -373,7 +365,6 @@
           
         </p>
         </div>
-
 
 
 <ul id="social" class="mt-8 flex justify-center gap-6 sm:justify-start md:gap-8">
@@ -486,78 +477,5 @@
     </div>
   </div>
 </footer>
-
-<script>
-  var TxtType = function(el, toRotate, period) {
-        this.toRotate = toRotate;
-        this.el = el;
-        this.loopNum = 0;
-        this.period = parseInt(period, 10) || 2000;
-        this.txt = '';
-        this.tick();
-        this.isDeleting = false;
-    };
-
-    TxtType.prototype.tick = function() {
-        var i = this.loopNum % this.toRotate.length;
-        var fullTxt = this.toRotate[i];
-
-        if (this.isDeleting) {
-        this.txt = fullTxt.substring(0, this.txt.length - 1);
-        } else {
-        this.txt = fullTxt.substring(0, this.txt.length + 1);
-        }
-
-        this.el.innerHTML = '<span class="wrap">'+this.txt+'</span>';
-
-        var that = this;
-        var delta = 200 - Math.random() * 100;
-
-        if (this.isDeleting) { delta /= 2; }
-
-        if (!this.isDeleting && this.txt === fullTxt) {
-        delta = this.period;
-        this.isDeleting = true;
-        } else if (this.isDeleting && this.txt === '') {
-        this.isDeleting = false;
-        this.loopNum++;
-        delta = 500;
-        }
-
-        setTimeout(function() {
-        that.tick();
-        }, delta);
-    };
-
-    window.onload = function() {
-        var elements = document.getElementsByClassName('typewrite');
-        for (var i=0; i<elements.length; i++) {
-            var toRotate = elements[i].getAttribute('data-type');
-            var period = elements[i].getAttribute('data-period');
-            if (toRotate) {
-              new TxtType(elements[i], JSON.parse(toRotate), period);
-            }
-        }
-        // INJECT CSS
-        var css = document.createElement("style");
-        css.type = "text/css";
-        css.innerHTML = ".typewrite > .wrap { border-right: 0.08em solid #fff}";
-        document.body.appendChild(css);
-    };
-</script>
-
-<Script>
-  var button = document.querySelector('#toggle-menu-button');
-  var menu = document.querySelector('#toggle-menu');
-  var open = document.querySelector('#open');
-  var close = document.querySelector('#close');
-
-  button.addEventListener('click', (e)=>{
-    menu.classList.toggle('hidden');
-    open.classList.toggle('hidden');
-    close.classList.toggle('hidden');
-  });
-</Script>
-<script src="js/jquery.min.js"></script>
   </body>
 </html>
