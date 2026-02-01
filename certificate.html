@@ -51,71 +51,7 @@
 #social li a:hover{
   border-bottom: 0.5px solid white;
 }
-/*book*/
-/* From Uiverse.io by eslam-hany */ 
-.book {
-  position: relative;
-  border-radius: 10px;
-  width: 220px;
-  height: 300px;
-  background-color: whitesmoke;
-  -webkit-box-shadow: 1px 1px 12px #000;
-  box-shadow: 1px 1px 12px #000;
-  -webkit-transform: preserve-3d;
-  -ms-transform: preserve-3d;
-  transform: preserve-3d;
-  -webkit-perspective: 2000px;
-  perspective: 2000px;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  color: #000;
-}
 
-.cover {
-  top: 0;
-  position: absolute;
-  background-color: rgb(255, 255, 255);
-  width: 100%;
-  height: 100%;
-  border-radius: 10px;
-  cursor: pointer;
-  -webkit-transition: all 0.5s;
-  transition: all 0.5s;
-  -webkit-transform-origin: 0;
-  -ms-transform-origin: 0;
-  transform-origin: 0;
-  -webkit-box-shadow: 1px 1px 8px #000;
-  box-shadow: 1px 1px 8px #000;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-}
-
-.book:hover .cover {
-  -webkit-transition: all 0.5s;
-  transition: all 0.5s;
-  -webkit-transform: rotatey(-80deg);
-  -ms-transform: rotatey(-80deg);
-  transform: rotatey(-80deg);
-}
-
-p {
-  font-size: 20px;
-  font-weight: bolder;
-}
 </style>
 <body class="bg-gray-100 font-sans leading-normal tracking-normal m-0 sm:m-5 ">
   
@@ -232,33 +168,23 @@ p {
     <section class=" mx-auto max-w-screen-xl bg-white">
 
     </section>
-   <h2 class="py-8 text-center text-3xl font-bold uppercase">Certificates</h2>
+<h2 class="py-8 text-center text-3xl font-bold uppercase">Certificates</h2>
 
 <section class="px-4 py-16 sm:px-6 lg:px-8">
   <div class="mx-auto max-w-7xl">
-    
     <div id="certificatesGrid" class="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3"></div>
   </div>
 </section>
 
 <!-- MODAL -->
 <div id="certModal" class="fixed inset-0 hidden z-[999] bg-black/80 flex items-center justify-center p-4">
-  <button onclick="closeCertModal()" 
-    class="absolute top-4 right-4 w-12 h-12 rounded-full bg-white text-black text-3xl font-bold flex items-center justify-center z-50">
-    ×
-  </button>
-
-  <button onclick="navigateCert(-1)" 
-    class="absolute left-4 top-1/2 -translate-y-1/2 bg-white text-black w-12 h-12 rounded-full text-3xl font-bold z-40">
-    ‹
-  </button>
-
-  <iframe id="certFrame" class="w-full max-w-5xl h-[90vh] bg-white rounded-lg border-2 border-white"></iframe>
-
-  <button onclick="navigateCert(1)" 
-    class="absolute right-4 top-1/2 -translate-y-1/2 bg-white text-black w-12 h-12 rounded-full text-3xl font-bold z-40">
-    ›
-  </button>
+  <button onclick="closeCertModal()" class="absolute top-4 right-4 w-12 h-12 rounded-full bg-white text-black text-3xl font-bold flex items-center justify-center z-50">×</button>
+  <button onclick="navigateCert(-1)" class="absolute left-4 top-1/2 -translate-y-1/2 bg-white text-black w-12 h-12 rounded-full text-3xl font-bold z-40">‹</button>
+  
+  <!-- Updated iframe to fit modal -->
+  <iframe id="certFrame" class="w-full max-w-full h-full max-h-full bg-white rounded-lg border-2 border-white"></iframe>
+  
+  <button onclick="navigateCert(1)" class="absolute right-4 top-1/2 -translate-y-1/2 bg-white text-black w-12 h-12 rounded-full text-3xl font-bold z-40">›</button>
 </div>
 
 <script>
@@ -274,19 +200,18 @@ fetch('data/certificates.json')
     data.forEach((cert, index) => {
       const card = document.createElement('div');
       card.className = "group relative overflow-hidden rounded-xl border-2 border-black shadow-lg hover:shadow-xl transition cursor-pointer bg-white";
-
+      
       card.innerHTML = `
         <div class="h-64 bg-gray-100">
-          <iframe src="${cert.image}" 
-            class="w-full h-full pointer-events-none"></iframe>
+          <iframe src="${cert.image}" class="w-full h-full pointer-events-none"></iframe>
         </div>
-
-        <div class="absolute inset-0 bg-white/95 opacity-0 group-hover:opacity-100 transition p-4 flex flex-col justify-end">
+        <!-- Updated hover/info div: always visible on small screens -->
+        <div class="absolute inset-0 bg-white/95 opacity-100 sm:opacity-0 group-hover:opacity-100 transition p-4 flex flex-col justify-end">
           <h3 class="font-bold text-lg">${cert.title}</h3>
           <p class="text-sm text-gray-700">${cert.issuer} • ${cert.date}</p>
         </div>
       `;
-
+      
       card.onclick = () => openCertModal(index);
       grid.appendChild(card);
     });
@@ -309,13 +234,13 @@ function closeCertModal() {
 // NAVIGATION
 function navigateCert(dir) {
   currentCertIndex += dir;
-
   if (currentCertIndex < 0) currentCertIndex = certificates.length - 1;
   if (currentCertIndex >= certificates.length) currentCertIndex = 0;
-
   document.getElementById('certFrame').src = certificates[currentCertIndex].image;
 }
 </script>
+
+
 
 
 
