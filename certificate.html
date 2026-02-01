@@ -210,7 +210,6 @@
 <!-- PDF.js CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 <script>
-  // Set worker from CDN
   pdfjsLib.GlobalWorkerOptions.workerSrc =
     "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
 
@@ -218,7 +217,7 @@
   let currentCertIndex = 0;
   let pdfDoc = null;
   let pageNum = 1;
-  let scale = 1.0; // first page scaling for modal
+  let scale = 1.0; // Modal scale
 
   const canvas = document.getElementById("pdfCanvas");
   const ctx = canvas.getContext("2d");
@@ -234,46 +233,49 @@
         card.className =
           "group relative overflow-hidden rounded-xl border-2 border-black shadow-lg hover:shadow-xl transition cursor-pointer bg-white";
 
-        // Create a container for the PDF canvas
+        // Card canvas container
         const canvasContainer = document.createElement("div");
         canvasContainer.className = "h-64 bg-gray-100 flex items-center justify-center overflow-hidden";
 
         const cardCanvas = document.createElement("canvas");
-        cardCanvas.className = "w-full h-full object-cover pointer-events-none";
+        cardCanvas.className = "w-full h-full object-cover pointer-events-none object-cover";
         canvasContainer.appendChild(cardCanvas);
         card.appendChild(canvasContainer);
 
-        // Desktop hover overlay
+        // Desktop overlay
         const overlay = document.createElement("div");
         overlay.className = "absolute inset-0 bg-white/95 opacity-0 md:group-hover:opacity-100 transition p-4 hidden md:flex flex-col justify-end";
         overlay.innerHTML = `<h3 class="font-bold text-lg">${cert.title}</h3>
                              <p class="text-sm text-gray-700">${cert.issuer} • ${cert.date}</p>`;
         card.appendChild(overlay);
 
-        // Mobile text below PDF
+        // Mobile text
         const mobileText = document.createElement("div");
         mobileText.className = "p-4 md:hidden";
         mobileText.innerHTML = `<h3 class="font-bold text-lg">${cert.title}</h3>
                                 <p class="text-sm text-gray-700">${cert.issuer} • ${cert.date}</p>`;
         card.appendChild(mobileText);
 
-        // Render first page of PDF in card canvas
+        // Render first page of PDF at high-DPI for sharpness
         pdfjsLib.getDocument(cert.image).promise.then(pdf => {
           pdf.getPage(1).then(page => {
-            const viewport = page.getViewport({ scale: 0.3 }); // adjust thumbnail scale
+            const dpi = window.devicePixelRatio || 1;
+            const viewport = page.getViewport({ scale: 0.3 * dpi }); // small thumbnail but high-res
             cardCanvas.width = viewport.width;
             cardCanvas.height = viewport.height;
-            const renderCtx = { canvasContext: cardCanvas.getContext("2d"), viewport: viewport };
-            page.render(renderCtx);
+            cardCanvas.style.width = `${viewport.width / dpi}px`;
+            cardCanvas.style.height = `${viewport.height / dpi}px`;
+            page.render({ canvasContext: cardCanvas.getContext("2d"), viewport: viewport });
           });
         });
 
-        // Open modal on click
+        // Open modal
         card.onclick = () => openCertModal(index);
         grid.appendChild(card);
       });
     });
 
+  // Modal rendering
   async function renderPDF(url) {
     pdfDoc = await pdfjsLib.getDocument(url).promise;
     pageNum = 1;
@@ -283,8 +285,8 @@
   function drawPage(num) {
     pdfDoc.getPage(num).then(page => {
       const viewport = page.getViewport({ scale: scale });
-      canvas.height = viewport.height;
       canvas.width = viewport.width;
+      canvas.height = viewport.height;
       page.render({ canvasContext: ctx, viewport: viewport });
     });
   }
@@ -310,6 +312,7 @@
     renderPDF(certificates[currentCertIndex].image);
   }
 </script>
+
 
 
 
