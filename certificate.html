@@ -168,167 +168,187 @@
 
 <section class="px-4 py-16 sm:px-6 lg:px-8">
   <div class="mx-auto max-w-7xl">
-    <div id="certificatesGrid" class="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3"></div>
+    <div id="certificatesGrid"
+      class="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">
+    </div>
   </div>
 </section>
 
 <!-- MODAL -->
-<div
-  id="certModal"
-  class="fixed inset-0 hidden z-[999] bg-black/80 flex items-center justify-center p-2 sm:p-6"
->
+<div id="certModal"
+  class="fixed inset-0 hidden z-[999] bg-black/80 flex items-center justify-center p-4">
+
   <!-- Close -->
-  <button
-    onclick="closeCertModal()"
-    class="absolute top-4 right-4 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white text-black text-2xl sm:text-3xl font-bold flex items-center justify-center z-50"
-  >
+  <button onclick="closeCertModal()"
+    class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white text-black text-2xl font-bold z-50">
     ×
   </button>
 
   <!-- Prev -->
-  <button
-    onclick="navigateCert(-1)"
-    class="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 bg-white text-black w-10 h-10 sm:w-12 sm:h-12 rounded-full text-2xl sm:text-3xl font-bold z-40 flex items-center justify-center"
-  >
+  <button onclick="navigateCert(-1)"
+    class="absolute left-4 top-1/2 -translate-y-1/2 bg-white w-10 h-10 rounded-full text-xl z-40">
     ‹
   </button>
 
-  <!-- PDF Canvas -->
-  <div class="w-full h-full max-h-[85vh] sm:max-w-3xl lg:max-w-5xl bg-white rounded-lg border-2 border-white overflow-auto">
-    <canvas id="pdfCanvas" class="w-full"></canvas>
-  </div>
+  <!-- Canvas -->
+  <canvas id="pdfCanvas"
+    class="max-w-full max-h-full bg-white rounded-lg shadow-xl"></canvas>
 
   <!-- Next -->
-  <button
-    onclick="navigateCert(1)"
-    class="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 bg-white text-black w-10 h-10 sm:w-12 sm:h-12 rounded-full text-2xl sm:text-3xl font-bold z-40 flex items-center justify-center"
-  >
+  <button onclick="navigateCert(1)"
+    class="absolute right-4 top-1/2 -translate-y-1/2 bg-white w-10 h-10 rounded-full text-xl z-40">
     ›
   </button>
 </div>
 
 <!-- PDF.js CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+
+
 <script>
-  pdfjsLib.GlobalWorkerOptions.workerSrc =
-    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
 
-  let certificates = [];
-  let currentCertIndex = 0;
-  let pdfDoc = null;
-  let pageNum = 1;
-  let scale = 1.0; // Modal scale
+let certificates = [];
+let currentCertIndex = 0;
+let pdfDoc = null;
 
-  const canvas = document.getElementById("pdfCanvas");
-  const ctx = canvas.getContext("2d");
+const canvas = document.getElementById("pdfCanvas");
+const ctx = canvas.getContext("2d");
 
-  fetch("data/certificates.json")
-    .then(res => res.json())
-    .then(data => {
-      certificates = data;
-      const grid = document.getElementById("certificatesGrid");
+// ================== LOAD CARDS ==================
+fetch("data/certificates.json")
+  .then(res => res.json())
+  .then(data => {
+    certificates = data;
+    const grid = document.getElementById("certificatesGrid");
 
-      data.forEach((cert, index) => {
-        const card = document.createElement("div");
-        card.className =
-          "group relative overflow-hidden rounded-xl border-2 border-black shadow-lg hover:shadow-xl transition cursor-pointer bg-white";
+    data.forEach((cert, index) => {
+      const card = document.createElement("div");
+      card.className =
+        "group relative overflow-hidden rounded-xl border-2 border-black shadow-lg cursor-pointer bg-white";
 
-        // Container for card PDF
-        const canvasContainer = document.createElement("div");
-        canvasContainer.className = "relative h-64 w-full overflow-hidden bg-gray-100";
+      // Card preview container
+      const preview = document.createElement("div");
+      preview.className = "relative h-64 overflow-hidden bg-gray-100";
 
-        const cardCanvas = document.createElement("canvas");
-        cardCanvas.className = "absolute top-0 left-0 w-full h-full object-cover pointer-events-none";
-        canvasContainer.appendChild(cardCanvas);
-        card.appendChild(canvasContainer);
+      const cardCanvas = document.createElement("canvas");
+      cardCanvas.className = "absolute inset-0 w-full h-full";
+      preview.appendChild(cardCanvas);
+      card.appendChild(preview);
 
-        // Desktop overlay
-        const overlay = document.createElement("div");
-        overlay.className = "absolute inset-0 bg-white/95 opacity-0 md:group-hover:opacity-100 transition p-4 hidden md:flex flex-col justify-end";
-        overlay.innerHTML = `<h3 class="font-bold text-lg">${cert.title}</h3>
-                             <p class="text-sm text-gray-700">${cert.issuer} • ${cert.date}</p>`;
-        card.appendChild(overlay);
+      // Mobile text
+      const mobileText = document.createElement("div");
+      mobileText.className = "p-4 md:hidden";
+      mobileText.innerHTML = `
+        <h3 class="font-bold">${cert.title}</h3>
+        <p class="text-sm text-gray-600">${cert.issuer} • ${cert.date}</p>`;
+      card.appendChild(mobileText);
 
-        // Mobile text
-        const mobileText = document.createElement("div");
-        mobileText.className = "p-4 md:hidden";
-        mobileText.innerHTML = `<h3 class="font-bold text-lg">${cert.title}</h3>
-                                <p class="text-sm text-gray-700">${cert.issuer} • ${cert.date}</p>`;
-        card.appendChild(mobileText);
+      // Desktop hover overlay
+      const overlay = document.createElement("div");
+      overlay.className =
+        "absolute inset-0 bg-white/95 opacity-0 md:group-hover:opacity-100 transition p-4 hidden md:flex flex-col justify-end";
+      overlay.innerHTML = `
+        <h3 class="font-bold">${cert.title}</h3>
+        <p class="text-sm text-gray-600">${cert.issuer} • ${cert.date}</p>`;
+      card.appendChild(overlay);
 
-        // Render first page of PDF to fully cover the card
-        pdfjsLib.getDocument(cert.image).promise.then(pdf => {
-          pdf.getPage(1).then(page => {
-            const dpi = window.devicePixelRatio || 1;
+      renderCardPDF(cert.image, cardCanvas, preview);
+      card.onclick = () => openCertModal(index);
 
-            // Card container dimensions
-            const cardWidth = canvasContainer.clientWidth;
-            const cardHeight = canvasContainer.clientHeight;
+      grid.appendChild(card);
+    });
+  });
 
-            // PDF viewport at scale 1
-            const viewport = page.getViewport({ scale: 1 });
+// ================== CARD PDF RENDER ==================
+function renderCardPDF(url, canvas, container) {
+  pdfjsLib.getDocument(url).promise.then(pdf => {
+    pdf.getPage(1).then(page => {
+      const dpi = window.devicePixelRatio || 1;
+      const containerWidth = container.clientWidth;
+      const containerHeight = container.clientHeight;
 
-            // Compute scale to cover entire card (like object-cover)
-            const scaleX = cardWidth / viewport.width;
-            const scaleY = cardHeight / viewport.height;
-            const finalScale = Math.max(scaleX, scaleY) * dpi;
+      const viewport = page.getViewport({ scale: 1 });
+      const scale = Math.max(
+        containerWidth / viewport.width,
+        containerHeight / viewport.height
+      );
 
-            const finalViewport = page.getViewport({ scale: finalScale });
+      const finalViewport = page.getViewport({ scale: scale * dpi });
 
-            cardCanvas.width = finalViewport.width;
-            cardCanvas.height = finalViewport.height;
-            cardCanvas.style.width = `${finalViewport.width / dpi}px`;
-            cardCanvas.style.height = `${finalViewport.height / dpi}px`;
+      canvas.width = finalViewport.width;
+      canvas.height = finalViewport.height;
+      canvas.style.width = `${finalViewport.width / dpi}px`;
+      canvas.style.height = `${finalViewport.height / dpi}px`;
 
-            page.render({
-              canvasContext: cardCanvas.getContext("2d"),
-              viewport: finalViewport
-            });
-          });
-        });
-
-        // Open modal
-        card.onclick = () => openCertModal(index);
-        grid.appendChild(card);
+      page.render({
+        canvasContext: canvas.getContext("2d"),
+        viewport: finalViewport
       });
     });
+  });
+}
 
-  // Modal rendering
-  async function renderPDF(url) {
-    pdfDoc = await pdfjsLib.getDocument(url).promise;
-    pageNum = 1;
-    drawPage(pageNum);
-  }
+// ================== MODAL ==================
+function openCertModal(index) {
+  currentCertIndex = index;
+  document.getElementById("certModal").classList.remove("hidden");
+  document.body.classList.add("overflow-hidden");
+  loadModalPDF(certificates[index].image);
+}
 
-  function drawPage(num) {
-    pdfDoc.getPage(num).then(page => {
-      const viewport = page.getViewport({ scale: scale });
-      canvas.width = viewport.width;
-      canvas.height = viewport.height;
-      page.render({ canvasContext: ctx, viewport: viewport });
-    });
-  }
+function closeCertModal() {
+  document.getElementById("certModal").classList.add("hidden");
+  document.body.classList.remove("overflow-hidden");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
 
-  function openCertModal(index) {
-    currentCertIndex = index;
-    renderPDF(certificates[index].image);
+function navigateCert(dir) {
+  currentCertIndex += dir;
+  if (currentCertIndex < 0) currentCertIndex = certificates.length - 1;
+  if (currentCertIndex >= certificates.length) currentCertIndex = 0;
+  loadModalPDF(certificates[currentCertIndex].image);
+}
+
+// ================== MODAL PDF RENDER (FIXED!) ==================
+async function loadModalPDF(url) {
+  pdfDoc = await pdfjsLib.getDocument(url).promise;
+  renderModalPage(1);
+}
+
+function renderModalPage(pageNum) {
+  pdfDoc.getPage(pageNum).then(page => {
     const modal = document.getElementById("certModal");
-    modal.classList.remove("hidden");
-    document.body.classList.add("overflow-hidden");
-  }
+    const padding = 32;
 
-  function closeCertModal() {
-    document.getElementById("certModal").classList.add("hidden");
-    document.body.classList.remove("overflow-hidden");
+    const modalWidth = modal.clientWidth - padding;
+    const modalHeight = modal.clientHeight - padding;
+
+    const viewport = page.getViewport({ scale: 1 });
+
+    // 👇 THIS IS THE FIX
+    const scale = Math.min(
+      modalWidth / viewport.width,
+      modalHeight / viewport.height
+    );
+
+    const dpi = window.devicePixelRatio || 1;
+    const finalViewport = page.getViewport({ scale: scale * dpi });
+
+    canvas.width = finalViewport.width;
+    canvas.height = finalViewport.height;
+    canvas.style.width = `${finalViewport.width / dpi}px`;
+    canvas.style.height = `${finalViewport.height / dpi}px`;
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-  }
 
-  function navigateCert(dir) {
-    currentCertIndex += dir;
-    if (currentCertIndex < 0) currentCertIndex = certificates.length - 1;
-    if (currentCertIndex >= certificates.length) currentCertIndex = 0;
-    renderPDF(certificates[currentCertIndex].image);
-  }
+    page.render({
+      canvasContext: ctx,
+      viewport: finalViewport
+    });
+  });
+}
 </script>
 
 
