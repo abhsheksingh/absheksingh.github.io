@@ -200,7 +200,6 @@
     width: 5rem;
   }
 }
-
 </style>
 <body class="bg-gray-100 font-sans leading-normal tracking-normal m-0 sm:m-5 ">
   
@@ -226,10 +225,10 @@
           <div id="toggle-menu" class="hidden lg:block font-bold text-white text-right text-3xl bg-gray-800 fixed top-0 left-0 h-screen w-screen flex flex-col items-center justify-center lg:text-lg lg:relative lg:text-slate-900 lg:bg-transparent lg:w-auto lg:h-auto lg:text-left">
             <ul class="flex flex-col gap-y-7 lg:flex-row lg:gap-2">
             <li class="lg:px-4 relative flex items-center text-center group" >
-                  <a href="./project.html" target="_blank" class="transition ease-in-out duration-150">
+                  <a href="/project.html" target="_blank" class="transition ease-in-out duration-150">
                     <img 
                       src="icons/project.svg" 
-                      class="w-9 h-9 invert lg:invert-0" 
+                      class="w-8 h-8 invert lg:invert-0" 
                       alt="GitHub"
                     /> 
                   </a>
@@ -238,7 +237,19 @@
                     Projects
                   </span>
             </li>
-
+            <li class="lg:px-4 relative flex items-center text-center group" >
+                  <a href="/certificate.html" target="_blank" class="transition ease-in-out duration-150">
+                    <img 
+                      src="icons/cert.svg" 
+                      class="w-8 h-8 invert lg:invert-0" 
+                      alt="GitHub"
+                    /> 
+                  </a>
+                  <!-- Tooltip centered above the icon -->
+                  <span class="absolute bottom-full left-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2 -translate-x-1/2 whitespace-nowrap">
+                    Certificates
+                  </span>
+            </li>
             <li class="lg:px-4 relative flex items-center group" >
                   <a href="https://github.com/abhsheksingh" target="_blank" class="transition ease-in-out duration-150">
                     <img 
@@ -265,7 +276,6 @@
                   LinkedIn
                   </span>
             </li>
-
           </ul>
           </div>
 
@@ -651,11 +661,19 @@ fetch("data/categories.json")
         </div>
 
 
+
 <ul id="social" class="mt-8 flex justify-center gap-6 sm:justify-start md:gap-8">
   <li>
-    <a href="/" rel="noreferrer" target="_blank" class="flex items-center justify-center w-10 h-10">
+    <a href="project.html" rel="noreferrer" target="_blank" class="flex items-center justify-center w-10 h-10">
       <span class="sr-only">Projects</span>
       <img src="icons/project.svg" class="w-full h-full object-contain invert" alt="Projects"/> 
+    </a>
+  </li>
+
+    <li>
+    <a href="certificate.html" rel="noreferrer" target="_blank" class="flex items-center justify-center w-10 h-10">
+      <span class="sr-only">Certificates</span>
+      <img src="icons/cert.svg" class="w-full h-full object-contain invert" alt="Projects"/> 
     </a>
   </li>
 
